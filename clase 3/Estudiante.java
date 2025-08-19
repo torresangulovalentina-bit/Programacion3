@@ -1,3 +1,5 @@
+import java.util.Arrays;
+
 public class Estudiante {
     //atributos
     private int id;
@@ -19,7 +21,7 @@ public void matricularCursos(String[]cursos){
 }
     //metodo toString
     public String toString(){
-        return "Estdiante: [ id: "+ id + "cedula: "+ cedula + " nombre: "+ nombre+ " facultad: "+ facultad +"]"{
+       return "Estudiante: [id: "+ id+ " + Cedula: " +cedula+ "Nombre: " + nombre + "Facultad: "+ facultad+"]";
+    }  
 }
     
-}
