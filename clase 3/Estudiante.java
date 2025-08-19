@@ -12,7 +12,10 @@ public class Estudiante {
         this.nombre = nombre;
         this.facultad = facultad;
 
-
+}
+// metodo matricular cursos
+public void matricularCursos(String[]cursos){
+    System.out.println(Arrays.toString(cursos));
 }
     //metodo toString
     public String toString(){
