@@ -19,6 +19,7 @@ public void matricularCursos(String[]cursos){
 }
     //metodo toString
     public String toString(){
-        return "Estdiante: [ id: "+ id + "cedula: "+ cedula + " nombre: "+ nombre+ " facultad: "+ facultad +]"{
+        return "Estdiante: [ id: "+ id + "cedula: "+ cedula + " nombre: "+ nombre+ " facultad: "+ facultad +"]"{
 }
-    }
+    
+}
