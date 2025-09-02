@@ -21,8 +21,8 @@ public class Libro {
         return precio;
     }
      @Override
-        public  toString (){
-     return "Libro:[titulo=" + ", autor=" + autor + ", precio=" + precio +"]";
+        public String toString() {
+            return "Libro:[titulo=" + titulo + ", autor=" + autor + ", precio=" + precio + "]";
         }
      
         //calcular precio total de los libros en el arreglo

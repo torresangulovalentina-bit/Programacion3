@@ -1,6 +1,4 @@
 
-package clase4;
-
 public class EjecutarLibro{
     public static void main(String[] args) {
         // Crear un objeto de la clase Libro
