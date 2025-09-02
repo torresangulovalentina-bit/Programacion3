@@ -26,11 +26,28 @@ public class Libro {
         }
      
         //calcular precio total de los libros en el arreglo
-    public static double calcularPrecioTol(Libro[]libros){
+    public static double caltodo(Libro[]libros){
         double total =0.0;
          for(int i=0; i< libros.length; i++){
             total += libros[i].getPrecio();
          }
           return total;
+
     }
+
+    public static void ordenLibro(Libro[] libros) {
+
+        for (int i = 0; i < libros.length - 1; i++) { //controla el numero de pasadas
+            for (int j = 0; j < libros.length - i - 1; j++) {
+                if (libros[j].getPrecio() > libros[j + 1].getPrecio()) {
+                    // intercambio de libros
+                    Libro aux = libros[j];
+                    libros[j] = libros[j + 1];
+                    libros[j + 1] = aux;
+                }
+            }
+        }
+     }
+
 }
+
