@@ -156,7 +156,7 @@ class SistemaCasilleros {
             }
             System.out.println(sb + "  <- fila " + fila);
         }
-        String columnas = "       ";
+        String columnas = "";
         for (int columna = 0; columna < casilleros[0].length; columna++) columnas += columna + "  ";
         System.out.println(columnas);
     }
