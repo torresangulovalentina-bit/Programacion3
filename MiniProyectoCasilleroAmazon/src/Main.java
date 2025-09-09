@@ -1,328 +1,302 @@
-
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
-import java.time.format.DateTimeParseException;
 import java.util.Scanner;
 
-/**
- * Mini-Proyecto "Casillero Oficina de Correos"
- * Requisitos cubiertos:
- *  - 3.1 Menú Principal: registro, consulta de casilleros, información de paquetes, cierre.
- *  - 3.1.1 Asignación de casilleros: organización por estructura (matriz), esquema de puestos, sin solapamientos.
- *  - 3.2 Consideraciones internas: finaliza a voluntad del usuario, mensajes de advertencia, integridad, sin cierres inesperados.
- *
- * Uso de ARREGLOS y MÉTODO DE BURBUJA (Bubble Sort) para ordenar consultas.
- */
-public class Main {
+class SistemaCasilleros {
+    private Paquete[][] casilleros;
+    private final Scanner lector = new Scanner(System.in);
 
-    public static void main(String[] args) {
-        LockerSystem system = new LockerSystem(4, 6); // 4 filas x 6 columnas (ajustable)
-        system.run();
-    }
-}
-
-class LockerSystem {
-    private Package[][] lockers;
-    private final Scanner scanner = new Scanner(System.in);
-    private static final DateTimeFormatter DF = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-
-    // Para simular "no todos los casilleros son iguales": deshabilitamos algunas posiciones (opcional).
-    // Formato: pares "fila,col" de posiciones no disponibles físicamente.
-    private static final String[] DISABLED_SLOTS = new String[] {
+    // Para simular no todos los casilleros son iguales se deshabilitan algunas posiciones
+    private static final String[] POSICIONES_DESHABILITADAS = new String[] {
         // "0,0", "2,5" // descomente para deshabilitar posiciones específicas
     };
 
-    public LockerSystem(int rows, int cols) {
-        lockers = new Package[rows][cols];
-        applyDisabledSlots();
+    public SistemaCasilleros(int filas, int columnas) {
+        casilleros = new Paquete[filas][columnas];
+        aplicarPosicionesDeshabilitadas();
     }
 
-    private void applyDisabledSlots() {
-        for (String s : DISABLED_SLOTS) {
-            String[] rc = s.split(",");
-            int r = Integer.parseInt(rc[0].trim());
-            int c = Integer.parseInt(rc[1].trim());
-            if (isInside(r,c)) {
-                // Marcamos con un Package "fantasma" bloqueado
-                lockers[r][c] = Package.blocked(r, c);
+    private void aplicarPosicionesDeshabilitadas() {//se encarga de deshabilitar posiciones específicas en la matriz de casilleros simulando que algunos no están disponibles
+        for (String posicion : POSICIONES_DESHABILITADAS) {
+            String[] filaColumna = posicion.split(",");
+            int fila = Integer.parseInt(filaColumna[0].trim());
+            int columna = Integer.parseInt(filaColumna[1].trim());
+            if (estaDentroRango(fila, columna)) {
+                casilleros[fila][columna] = Paquete.bloqueado(fila, columna);
             }
         }
     }
 
-    public void run() {
-        boolean keep = true;
-        while (keep) {
-            printMenu();
-            int opt = readInt("Seleccione una opción: ");
-            switch (opt) {
-                case 1: registerPackage(); break;
-                case 2: showAvailableLockers(); break;
-                case 3: showPackagesInfo(); break;
+    public void ejecutar() {// mantiene la aplicación en funcionamiento hasta que el usuario decida salir
+        boolean continuar = true;
+        while (continuar) {
+            mostrarMenu();
+            int opcion = leerEntero("Seleccione una opción: ");
+            switch (opcion) {
+                case 1: registrarPaquete(); break;
+                case 2: mostrarCasillerosDisponibles(); break;
+                case 3: mostrarInformacionPaquetes(); break;
                 case 4:
-                    println("\nCerrando aplicación... ¡Hasta pronto!");
-                    keep = false;
+                    System.out.println("\nCerrando aplicación... ¡Hasta pronto!");
+                    continuar = false;
                     break;
                 default:
-                    warn("Opción no válida.");
+                    System.out.println("⚠ " + "Opción no válida.");
             }
         }
     }
 
-    private void printMenu() {
-        println("\n===== MENÚ PRINCIPAL =====");
-        println("1. Registro de paquetes en el casillero");
-        println("2. Consulta de casilleros disponibles");
-        println("3. Información de cada paquete (fecha de ingreso y destinatario)");
-        println("4. Cerrar aplicación");
+    private void mostrarMenu() {
+        System.out.println("\n===== MENÚ PRINCIPAL =====");
+        System.out.println("1. Registro de paquetes en el casillero");
+        System.out.println("2. Consulta de casilleros disponibles");
+        System.out.println("3. Información de cada paquete (fecha de ingreso y destinatario)");
+        System.out.println("4. Cerrar aplicación");
     }
 
-    private void registerPackage() {
-        println("\n--- Registro de Paquete ---");
-        String recipient = readLine("Destinatario: ").trim();
-        if (recipient.isEmpty()) {
-            warn("El destinatario no puede estar vacío.");
+    private void registrarPaquete() {//se encarga de registrar un paquete en un casillero
+        System.out.println("\n--- Registro de Paquete ---");
+        String destinatario = leerLinea("Destinatario: ").trim();
+        if (destinatario.isEmpty()) {
+            System.out.println("⚠ " + "El destinatario no puede estar vacío.");
             return;
         }
-        String id = readLine("Identificador del paquete (código/guía): ").trim();
-        if (id.isEmpty()) {
-            warn("El identificador no puede estar vacío.");
+        String identificador = leerLinea("Identificador del paquete (código/guía): ").trim();
+        if (identificador.isEmpty()) {
+            System.out.println("⚠ " + "El identificador no puede estar vacío.");
             return;
         }
-        LocalDate date = readDate("Fecha de ingreso (formato yyyy-MM-dd, ENTER para hoy): ");
+       String fechaIngreso = leerLinea("Fecha de ingreso(ejemplo:D/M/A): ");
 
         // Mostrar esquema y permitir elección manual o automática
-        println("\nEsquema de casilleros ( [ ] disponible, [X] ocupado, [#] no disponible ):");
-        drawLockers();
+        System.out.println("\nEsquema de casilleros ( [ ] disponible, [X] ocupado, [#] no disponible ):");
+        dibujarCasilleros();
 
-        println("\n1) Asignación automática (primer puesto libre)");
-        println("2) Elegir manualmente (fila, columna)");
-        int choice = readInt("Seleccione: ");
-        int[] pos;
-        if (choice == 2) {
-            int r = readInt("Fila (0-" + (lockers.length - 1) + "): ");
-            int c = readInt("Columna (0-" + (lockers[0].length - 1) + "): ");
-            pos = new int[]{r, c};
-            if (!isInside(r, c)) {
-                warn("Posición fuera de rango.");
+        System.out.println("\n1) Asignación automática (primer puesto libre)");
+        System.out.println("2) Elegir manualmente (fila, columna)");
+        int eleccion = leerEntero("Seleccione: ");
+        int[] posicion;
+        if (eleccion == 2) {
+            int fila = leerEntero("Fila (0-" + (casilleros.length - 1) + "): ");
+            int columna = leerEntero("Columna (0-" + (casilleros[0].length - 1) + "): ");
+            posicion = new int[]{fila, columna};
+            if (!estaDentroRango(fila, columna)) {
+                System.out.println("⚠ " + "Posición fuera de rango.");
                 return;
             }
-            if (!isFree(r, c)) {
-                warn("Ese casillero no está disponible.");
+            if (!estaLibre(fila, columna)) {
+                System.out.println("⚠ " + "Ese casillero no está disponible.");
                 return;
             }
         } else {
-            pos = findFirstFree();
-            if (pos == null) {
-                warn("No hay casilleros disponibles.");
+            posicion = buscarPrimerLibre();
+            if (posicion == null) {
+                System.out.println("⚠ " + "No hay casilleros disponibles.");
                 return;
             }
         }
 
-        int r = pos[0], c = pos[1];
-        lockers[r][c] = new Package(id, recipient, date, r, c);
-        println("Paquete asignado exitosamente al casillero (" + r + "," + c + ").");
+        int fila = posicion[0], columna = posicion[1];
+         casilleros[fila][columna] = new Paquete(identificador, destinatario, fechaIngreso, fila, columna);
+        System.out.println("Paquete asignado exitosamente al casillero (" + fila + "," + columna + ").");
     }
 
-    private void showAvailableLockers() {
-        println("\n--- Consulta de casilleros disponibles ---");
-        int count = 0;
-        for (int r = 0; r < lockers.length; r++) {
-            for (int c = 0; c < lockers[r].length; c++) {
-                if (isFree(r, c)) count++;
+    private void mostrarCasillerosDisponibles() {
+        System.out.println("\n--- Consulta de casilleros disponibles ---");
+        int disponibles = 0;
+        for (int fila = 0; fila < casilleros.length; fila++) {
+            for (int columna = 0; columna < casilleros[fila].length; columna++) {
+                if (estaLibre(fila, columna)) disponibles++;
             }
         }
-        drawLockers();
-        println("Disponibles: " + count + " | Ocupados: " + occupiedCount() + " | No disponibles: " + blockedCount());
+        dibujarCasilleros();
+        System.out.println("Disponibles: " + disponibles + " | Ocupados: " + contarOcupados() + " | No disponibles: " + contarBloqueados());
     }
 
-    private void showPackagesInfo() {
-        println("\n--- Información de Paquetes ---");
-        Package[] arr = toFlatArray();
-        if (arr.length == 0) {
-            warn("No hay paquetes registrados.");
+    private void mostrarInformacionPaquetes() {
+        System.out.println("\n--- Información de Paquetes ---");
+        Paquete[] arregloPaquetes = convertirArregloPlano();
+        if (arregloPaquetes.length == 0) {
+            System.out.println("⚠ " + "No hay paquetes registrados.");
             return;
         }
-        println("Ordenar por: 1) Fecha  2) Destinatario  3) Identificador");
-        int mode = readInt("Seleccione: ");
-        bubbleSort(arr, mode);
-        for (Package p : arr) {
-            println(p.toDisplayString());
+        System.out.println("Ordenar por: 1) Fecha  2) Destinatario  3) Identificador");
+        int modoOrden = leerEntero("Seleccione: ");
+        ordenarBurbuja(arregloPaquetes, modoOrden);//modoOrden
+        for (Paquete paquete : arregloPaquetes) {
+            System.out.println(paquete.CadenaMostrar());
         }
     }
 
-    private int occupiedCount() {
-        int count = 0;
-        for (int r = 0; r < lockers.length; r++) {
-            for (int c = 0; c < lockers[r].length; c++) {
-                if (lockers[r][c] != null && !lockers[r][c].isBlocked()) count++;
+    private int contarOcupados() {//cuenta cuantos casilleros estan ocupados
+        int ocupados = 0;
+        for (int fila = 0; fila < casilleros.length; fila++) {
+            for (int columna = 0; columna < casilleros[fila].length; columna++) {
+                if (casilleros[fila][columna] != null && !casilleros[fila][columna].estaBloqueado()) ocupados++;
             }
         }
-        return count;
+        return ocupados;
     }
 
-    private int blockedCount() {
-        int count = 0;
-        for (int r = 0; r < lockers.length; r++) {
-            for (int c = 0; c < lockers[r].length; c++) {
-                if (lockers[r][c] != null && lockers[r][c].isBlocked()) count++;
+    private int contarBloqueados() {//cuenta cuantos casilleros estan bloqueados
+        int bloqueados = 0;
+        for (int fila = 0; fila < casilleros.length; fila++) {
+            for (int columna = 0; columna < casilleros[fila].length; columna++) {
+                if (casilleros[fila][columna] != null && casilleros[fila][columna].estaBloqueado()) bloqueados++;
             }
         }
-        return count;
+        return bloqueados;
     }
-
-    private void drawLockers() {
-        for (int r = 0; r < lockers.length; r++) {
-            StringBuilder sb = new StringBuilder();
-            for (int c = 0; c < lockers[r].length; c++) {
-                if (lockers[r][c] == null) sb.append("[ ]");
-                else if (lockers[r][c].isBlocked()) sb.append("[#]");
-                else sb.append("[X]");
+    //se encarga de imprimir en la consola la forma visual de la matriz 
+    private void dibujarCasilleros() {
+        for (int fila = 0; fila < casilleros.length; fila++) {
+            String sb = "";
+            for (int columna = 0; columna < casilleros[fila].length; columna++) {
+                if (casilleros[fila][columna] == null) sb += "[ ]";
+                else if (casilleros[fila][columna].estaBloqueado()) sb += "[#]";
+                else sb += "[X]";
             }
-            println(sb.toString() + "  <- fila " + r);
+            System.out.println(sb + "  <- fila " + fila);
         }
-        StringBuilder cols = new StringBuilder("    ");
-        for (int c = 0; c < lockers[0].length; c++) cols.append(c).append("  ");
-        println(cols.toString());
+        String columnas = "       ";
+        for (int columna = 0; columna < casilleros[0].length; columna++) columnas += columna + "  ";
+        System.out.println(columnas);
     }
 
-    private boolean isInside(int r, int c) {
-        return r >= 0 && r < lockers.length && c >= 0 && c < lockers[0].length;
+    private boolean estaDentroRango(int fila, int columna) {//verifica si la fila y columna estan dentro del rango del arreglo
+        return fila >= 0 && fila < casilleros.length && columna >= 0 && columna < casilleros[0].length;
     }
 
-    private boolean isFree(int r, int c) {
-        return isInside(r, c) && lockers[r][c] == null;
+    private boolean estaLibre(int fila, int columna) {//verifica si la posicion del casillero esta libre (dentro del rango y nula)
+        return estaDentroRango(fila, columna) && casilleros[fila][columna] == null;
     }
-
-    private int[] findFirstFree() {
-        for (int r = 0; r < lockers.length; r++) {
-            for (int c = 0; c < lockers[r].length; c++) {
-                if (isFree(r, c)) return new int[]{r, c};
+    
+    private int[] buscarPrimerLibre() {//busca la primera posición libre en el arreglo de casilleros
+        for (int fila = 0; fila < casilleros.length; fila++) {
+            for (int columna = 0; columna < casilleros[fila].length; columna++) {
+                if (estaLibre(fila, columna))//si el casillero esta libre, devuelve la posicion
+                 return new int[]{fila, columna};//retorna la fila y columna del primer casillero libre, si no hay ninguno retorna null
             }
         }
         return null;
     }
 
-    private Package[] toFlatArray() {
-        int n = occupiedCount();
-        Package[] arr = new Package[n];
-        int idx = 0;
-        for (int r = 0; r < lockers.length; r++) {
-            for (int c = 0; c < lockers[r].length; c++) {
-                if (lockers[r][c] != null && !lockers[r][c].isBlocked()) {
-                    arr[idx++] = lockers[r][c];
+    private Paquete[] convertirArregloPlano() {
+        int cantidad = contarOcupados();//llama al metod contar ocupados para determinar el tamaño exacto del arreglo
+        Paquete[] arreglo = new Paquete[cantidad];
+        int indice = 0;
+        for (int fila = 0; fila < casilleros.length; fila++) {
+            for (int columna = 0; columna < casilleros[fila].length; columna++) {
+                if (casilleros[fila][columna] != null && !casilleros[fila][columna].estaBloqueado()) {
+                    arreglo[indice++] = casilleros[fila][columna];
+                    //verifica que el casillero no este bloqueado y que no sea nulo antes de agregarlo al arreglo
                 }
             }
         }
-        return arr;
+        return arreglo;
     }
 
     /**
-     * Bubble Sort para ordenar los paquetes según el modo:
+     * Ordenamiento Burbuja para ordenar los paquetes según el modo:
      * 1 = fecha, 2 = destinatario, 3 = identificador.
      */
-    private void bubbleSort(Package[] arr, int mode) {
-        boolean swapped = true;
-        int n = arr.length;
-        while (swapped) {
-            swapped = false;
-            for (int i = 1; i < n; i++) {
-                if (compare(arr[i-1], arr[i], mode) > 0) {
-                    Package tmp = arr[i-1];
-                    arr[i-1] = arr[i];
-                    arr[i] = tmp;
-                    swapped = true;
+   private void ordenarBurbuja(Paquete[] arreglo, int modo) {
+        int n = arreglo.length;
+        for (int i = 0; i < n - 1; i++) {
+            for (int j = 0; j < n - i - 1; j++) {
+                if (comparar(arreglo[j], arreglo[j + 1], modo) > 0) {
+                    Paquete temporal = arreglo[j];
+                    arreglo[j] = arreglo[j + 1];
+                    arreglo[j + 1] = temporal;
                 }
             }
-            n--;
         }
     }
 
-    private int compare(Package a, Package b, int mode) {
-        switch (mode) {
+    private int comparar(Paquete paqueteA, Paquete paqueteB, int modo) {
+        switch (modo) {
+            //se usa el compareToIgnoreCase para ignorar mayusculas y minusculas y se usa para ordenar (por el metodo burbuja)
             case 1: // fecha
-                return a.getDate().compareTo(b.getDate());
+                return paqueteA.obtenerFecha().compareTo(paqueteB.obtenerFecha());
             case 2: // destinatario
-                return a.getRecipient().compareToIgnoreCase(b.getRecipient());
+                return paqueteA.obtenerDestinatario().compareToIgnoreCase(paqueteB.obtenerDestinatario());
             case 3: // identificador
             default:
-                return a.getId().compareToIgnoreCase(b.getId());
+                return paqueteA.obtenerIdentificador().compareToIgnoreCase(paqueteB.obtenerIdentificador());
         }
     }
 
-    private LocalDate readDate(String prompt) {
-        String raw = readLine(prompt);
-        if (raw == null || raw.trim().isEmpty()) {
-            return LocalDate.now();
-        }
-        try {
-            return LocalDate.parse(raw.trim(), DF);
-        } catch (DateTimeParseException e) {
-            warn("Formato inválido. Use yyyy-MM-dd. Se usará la fecha de hoy.");
-            return LocalDate.now();
-        }
-    }
 
-    private int readInt(String prompt) {
+    private int leerEntero(String mensaje) {
         while (true) {
-            try {
-                print(prompt);
-                String s = scanner.nextLine();
-                return Integer.parseInt(s.trim());
-            } catch (Exception e) {
-                warn("Ingrese un número válido.");
+            System.out.print(mensaje);
+            String entrada = lector.nextLine().trim();
+            if (esNumeroValido(entrada)) {
+                return Integer.parseInt(entrada);
+            } else {
+                System.out.println("Ingrese un número válido.");
             }
         }
     }
 
-    private String readLine(String prompt) {
-        print(prompt);
-        return scanner.nextLine();
+    private boolean esNumeroValido(String cadena) {
+       
+        return cadena.matches("-?\\d+");
     }
 
-    private void println(String s) { System.out.println(s); }
-    private void print(String s) { System.out.print(s); }
-    private void warn(String s) { System.out.println("⚠ " + s); }
+    private String leerLinea(String mensaje) {
+        System.out.print(mensaje);
+        return lector.nextLine();
+    }
+
+
+static class Paquete {
+    private final String identificador;
+    private final String destinatario;
+    private final String fechaIngreso;
+    private final int fila;
+    private final int columna;
+    private final boolean bloqueado;
+
+    public Paquete(String identificador, String destinatario, String fechaIngreso, int fila, int columna) {
+        this.identificador = identificador;
+        this.destinatario = destinatario;
+        this.fechaIngreso = fechaIngreso;
+        this.fila = fila;
+        this.columna = columna;
+        this.bloqueado = false;
+    }
+
+    private Paquete(int fila, int columna, boolean bloqueado) {
+        this.identificador = "#BLOQUEADO#";
+        this.destinatario = "#";
+        this.fechaIngreso = "";
+        this.fila = fila;
+        this.columna = columna;
+        this.bloqueado = bloqueado;
+    }
+
+    public static Paquete bloqueado(int fila, int columna) {
+        return new Paquete(fila, columna, true);
+    }
+
+    //permite acceder a los datos del paquete y mostrar la información
+    public String obtenerIdentificador() { 
+        return identificador; }
+    public String obtenerDestinatario() {
+         return destinatario; }
+    public String obtenerFecha() {
+         return fechaIngreso; }
+    public int obtenerFila() {
+         return fila; }
+    public int obtenerColumna() {
+         return columna; }
+    public boolean estaBloqueado() {
+         return bloqueado; }
+//resume la informacion relevante del paquete
+    public String CadenaMostrar() {
+         return "ID: " + identificador +
+               " | Destinatario: " + destinatario +
+               " | Fecha: " + fechaIngreso +
+               " | Casillero: (" + fila + "," + columna + ")";
+    } 
 }
-
-class Package {
-    private final String id;
-    private final String recipient;
-    private final LocalDate date;
-    private final int row;
-    private final int col;
-    private final boolean blocked;
-
-    public Package(String id, String recipient, LocalDate date, int row, int col) {
-        this.id = id;
-        this.recipient = recipient;
-        this.date = date;
-        this.row = row;
-        this.col = col;
-        this.blocked = false;
-    }
-
-    private Package(int row, int col, boolean blocked) {
-        this.id = "#BLOCKED#";
-        this.recipient = "#";
-        this.date = LocalDate.MIN;
-        this.row = row;
-        this.col = col;
-        this.blocked = blocked;
-    }
-
-    public static Package blocked(int row, int col) {
-        return new Package(row, col, true);
-    }
-
-    public String getId() { return id; }
-    public String getRecipient() { return recipient; }
-    public LocalDate getDate() { return date; }
-    public int getRow() { return row; }
-    public int getCol() { return col; }
-    public boolean isBlocked() { return blocked; }
-
-    public String toDisplayString() {
-        return String.format("ID: %s | Destinatario: %s | Fecha: %s | Casillero: (%d,%d)",
-                id, recipient, date, row, col);
-    }
 }
