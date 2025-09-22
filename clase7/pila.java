@@ -7,7 +7,12 @@ public class pila {
     // creacion de una fila de numeros enteros 
     Stack<Integer> pila = new Stack<>();
 
+    //verificar si la fila esta vacia 
+
     public pila() {
+        // Verificar si la pila está vacía
+        System.out.println(pila.empty());//true
+
         // Insertar elementos en la pila 
         pila.push(8);
         pila.push(4);
@@ -30,7 +35,14 @@ public class pila {
         System.out.println( pila.search(4)); 
         System.out.println( pila.search(8)); 
         System.out.println( pila.search(50));  
-        
+
+         // Verificar si la pila está vacía
+        System.out.println(pila.empty());//false
+
+        //llamar al metodo para valiodar los parentesis
+       Ejercicio1 ojOp = new Ejercicio1();
+       String[] s = {"(", ")", "(", "(", ")", ")"};
+       
     }
 }
 
