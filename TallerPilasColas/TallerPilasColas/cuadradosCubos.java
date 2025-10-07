@@ -15,7 +15,7 @@ public class cuadradosCubos {
         double raizCuadrada = Math.sqrt(aPop);
         double raizCubica = Math.cbrt(bPop);
 
-        if (Math.abs(raizCuadrada - raizCubica) < 0.000000001) {
+        if (Math.abs(raizCuadrada - raizCubica) <0.000000001) {
             return true;
         }
         return false;
