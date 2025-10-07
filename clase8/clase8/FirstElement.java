@@ -2,10 +2,10 @@ package clase8.clase8;
 
 import java.util.Vector;
 
-public class EjemploFirstElement {
+public class FirstElement {
     private Vector<String> vector;
 
-    public EjemploFirstElement() {
+    public FirstElement() {
         vector = new Vector<>();
         vector.add("Primero");
         vector.add("Segundo");

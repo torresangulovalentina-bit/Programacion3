@@ -1,0 +1,41 @@
+import java.util.ArrayDeque;
+import java.util.Queue;
+import java.util.Stack;
+
+public class Tarea {
+    // Implementar la clase Tarea con los atributos
+    private String id;
+    private String descripcion;
+    private int prioridad;
+    private int tiempoLlegada;
+}
+    class GestorTareas {
+        Stack<Tarea> pilaTareas = new Stack<>();
+        Queue<Tarea> colaTareas = new ArrayDeque<>();
+        Map<String, Tarea> mapaTareas = new HashMap<>();
+
+        void agregarTarea(Tarea tarea) {
+           if (tarea.prioridad = 3) {
+                pilaPrioridad.push(tarea);
+            } else {
+                (if tarea.prioridad == 1|| tarea.prioridad == 2) {
+                colaDeEspera.offer(tarea);
+            }
+
+            public void tarea procesarSiguienteTarea() {
+                tarea= null;
+                if (!pilaPrioridad.isEmpty()) {
+                    tarea = pilaPrioridad.pop();
+                } else if (!colaDeEspera.isEmpty()) {
+                    tarea = colaDeEspera.poll();
+
+                if (tarea != null) {
+                    mapaTareas.put(tarea.id, "completada ");
+                    System.out.println("Procesando tarea: " + tarea.id);
+
+        }
+
+     }
+ }
+}
+}

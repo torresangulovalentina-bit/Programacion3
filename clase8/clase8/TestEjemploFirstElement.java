@@ -2,7 +2,7 @@ package clase8.clase8;
 
 public class TestEjemploFirstElement {
     public TestEjemploFirstElement() {
-        EjemploFirstElement ejemplo = new EjemploFirstElement();
+        FirstElement ejemplo = new FirstElement();
         System.out.println("Antes:");
         ejemplo.mostrar();
         ejemplo.obtenerPrimero();
