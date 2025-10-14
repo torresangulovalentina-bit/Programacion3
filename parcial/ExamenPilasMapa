@@ -33,7 +33,9 @@ int v = datos [ tope ];
  // (50 pts ) Verifica si los parntesises estan balanceados .
  public static boolean esBalanceado ( String s ) {
  // TODO : implementar usando PilaEnteros
+
   PilaEnteros pila = new PilaEnteros(datos.length());
+  
     for(int i=0; i<datos.length(); i++){
         char c = datos.charAt(i);//lee caracter en forma de cadena
         if(c == '('){
@@ -58,8 +60,10 @@ int v = datos [ tope ];
         System.out.println(" La calificacion esta FUERA del rango 0..100");
 
         if(califPorId.containsKey(id)){ //verifica si un HashMap contiene una clave especifica
-            califPorId.put(id, nuevo);//Actualizar o remplazar 
             System.out.println(" El id no fue encontrado en el mapa");
+
+            califPorId.put(id, nuevo); //actualiza la calificacion
+            System.out.println(" Calificacion actualizada para el id: " + id + " , " + nuevo);
             return true;
         }
 
@@ -80,3 +84,4 @@ int v = datos [ tope ];
  sc . close () ;
  }
  }
+}
