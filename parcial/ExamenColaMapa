@@ -1,0 +1,69 @@
+ import java . util . HashMap ;
+2 import java . util . Map ;
+3 import java . util . Scanner ;
+4
+5 public class ExamenColaMapa {
+6
+7 static class ColaCircularEnteros {
+8 private int [] datos ;
+9 private int cabeza ;
+10 private int cola ;
+11 private int tam ;
+12
+13 public ColaCircularEnteros ( int capacidad ) {
+14 datos = new int [ capacidad ];
+15 cabeza = 0;
+16 cola = 0;
+17 tam = 0;
+18 }
+19
+20 public boolean estaVacia () { return tam == 0; }
+21 public boolean estaLlena () { return tam == datos . length ; }
+22
+23 public void encolar ( int x ) {
+24 if ( estaLlena () ) throw new IllegalStateException (" Cola llena
+") ;
+25 datos [ cola ] = x ;
+26 cola = ( cola + 1) % datos . length ;
+27 tam ++;
+28 }
+29
+30 public int desencolar () {
+31 if ( estaVacia () ) throw new IllegalStateException (" Cola
+v a c a ") ;
+32 int v = datos [ cabeza ];
+33 cabeza = ( cabeza + 1) % datos . length ;
+34 tam - -;
+35 return v ;
+36 }
+37 }
+38
+39 // (50 pts ) Calcula el balance de p a r n t e s i s encolando +1 y -1.
+40 public static int balanceConCola ( String s ) {
+41 // TODO : usar ColaCircularEnteros para encolar y luego sumar
+42 return 0;
+43 }
+Página 3
+Estructura de Datos UNIAJC
+44
+45 // (50 pts ) Registra intentos por nombre en un mapa .
+46 public static int registrarIntento ( Map < String , Integer > intentos ,
+String nombre ) {
+47 // TODO : incrementar si existe o iniciar en 1 si no existe
+48 return 0;
+49 }
+50
+51 public static void main ( String [] args ) {
+52 Scanner sc = new Scanner ( System . in ) ;
+53 String cadena = sc . nextLine () ;
+54 System . out . println (" Balance cola : " + balanceConCola ( cadena ) ) ;
+55
+56 Map < String , Integer > intentos = new HashMap < String , Integer >() ;
+57 System . out . println (" Intentos ( Ana ): " + registrarIntento (
+intentos , "Ana") ) ;
+58 System . out . println (" Intentos ( Ana ): " + registrarIntento (
+intentos , "Ana") ) ;
+59
+60 sc . close () ;
+61 }
+62 }
