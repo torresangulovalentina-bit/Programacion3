@@ -7,7 +7,7 @@ import java.util.Scanner;
 public class ExamenPilaMapa {
     static class PilaEnteros {
         private int[] datos;
-        private int tope; // -1 si est vaca
+        private int tope; // -1 si esta vacia
 
         public PilaEnteros(int capacidad) {
             datos = new int[capacidad];
