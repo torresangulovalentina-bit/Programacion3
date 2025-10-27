@@ -2,7 +2,7 @@
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Scanner;
-import java.util.Stack;
+ //import java.util.Stack;
 
 public class ExamenPilaMapa {
     static class PilaEnteros {
@@ -86,7 +86,7 @@ public class ExamenPilaMapa {
 
             califPorId.put(id, nuevo); //actualiza la calificacion
             System.out.println(" Calificacion actualizada para el id: " + id + " , " + nuevo);
-            return true;
+           
         }
 
  return true;
