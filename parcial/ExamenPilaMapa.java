@@ -58,7 +58,7 @@ public class ExamenPilaMapa {
         PilaEnteros pila = new PilaEnteros(s.length());
 
         for (int i = 0; i < s.length(); i++) {
-            char c = s.charAt(i);// lee caracter en forma de cadena
+            char c = s.charAt(i);// lee caracter en forma de cadena //guarda el caracter en c
             if (c == '(') {
                 pila.apilar(1);// marcador de apertura
             } else if (c == ')') {
