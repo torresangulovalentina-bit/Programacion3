@@ -86,12 +86,12 @@ public class ExamenPilaMapa {
 
             califPorId.put(id, nuevo); //actualiza la calificacion
             System.out.println(" Calificacion actualizada para el id: " + id + " , " + nuevo);
-           
+          return false;  
         }
 
  return true;
       }
-      return false; 
+      
 
  }
 
