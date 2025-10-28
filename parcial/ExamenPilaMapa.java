@@ -82,7 +82,7 @@ public class ExamenPilaMapa {
         System.out.println(" La calificacion esta dentro del rango 0..100");
 
         if(califPorId.containsKey(id)){ //verifica si un HashMap contiene una clave especifica
-            System.out.println(" El id no fue encontrado en el mapa");
+            System.out.println(" El id fue encontrado en el mapa");
 
             califPorId.put(id, nuevo); //actualiza la calificacion
             System.out.println(" Calificacion actualizada para el id: " + id + " , " + nuevo);
