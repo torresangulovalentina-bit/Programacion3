@@ -1,6 +1,6 @@
 
 import java.util.HashMap;
-import java.util.Map;
+import java.util.Map;// guardar pare de valores (clave, valor)
 import java.util.Scanner;
  //import java.util.Stack;
 
@@ -91,7 +91,7 @@ public class ExamenPilaMapa {
 
  return true;
       }
-      return false;
+      return false; 
 
  }
 
