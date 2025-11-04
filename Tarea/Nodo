@@ -17,10 +17,10 @@ public class nodo {
     public int getValor() {
         return valor;
     }
-    public nodo getHijoIzquierdo() {
+    public nodo getHIzquierdo() {
         return H_izquierdo;
     }
-    public nodo getHijoDerecho() {
+    public nodo getHDerecho() {
         return H_derecho;
     }
  
@@ -58,13 +58,13 @@ public class nodo {
         System.out.println("Recorrido en Preorden: ");
         recorrido(raiz);// llama al metodo recursivo recorrido pasandole la raiz como punto de inicio
     }
-     private void recorrido(nodoA nodo) {
+     private void recorrido(nodo nodo) {
         if (nodo == null) {
             return;
         }
         System.out.println(nodo.getValor());// visita el nodo actual
-        recorrido(nodo.getHijoIzquierdo());// recorre el subarbol izquierdo
-        recorrido(nodo.getHijoDerecho());// recorre el subarbol derecho
+        recorrido(nodo.getHIzquierdo());// recorre el subarbol izquierdo
+        recorrido(nodo.getHDerecho());// recorre el subarbol derecho
         //se detiene cuando encuentra un nodo nulo
     }
    
@@ -73,13 +73,13 @@ public class nodo {
     }
     public nodo insertarValor(nodoA nodo, int valor) {
         if (nodo == null) {// cuando encuetra un espacio vacio crea un nuevo nodo y lo enlaza al padre
-            return new nodoArbol(valor);
+            return new nodo(valor);
         }
     //decide si insertar a la izquierda o derecha
         if (valor < nodo.getValor()) {
             nodo.setHIzquierdo(insertarValor(nodo.getHIzquierdo(), valor));
         } else if (valor > nodo.getValor()) {
-            nodo.setHDerecho(insertarValor(nodo.getHDerecho(), valor));
+            nodo.setHDerecho(insertarValor(nodo.getH_Derecho(), valor));
         }
         return nodo;
     }
