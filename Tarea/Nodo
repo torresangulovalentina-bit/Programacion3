@@ -2,8 +2,8 @@ public class nodo {
     //1 . visitar raiz
     //2 . recorrer subarbol izquierdo
     //3 . recorrer subarbol derecho
-    private nodoArbol hijo_izquierdo;
-    private nodoArbol hijo_derecho;
+    private nodo H_izquierdo;
+    private nodo H_derecho;
     private int valor;
  
     public nodo(int valor) {
