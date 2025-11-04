@@ -28,10 +28,10 @@ public class nodo {
     public void setValor(int valor) {
         this.valor = valor;
     }
-    public void setHijoIzquierdo(nodoArbol hijo_izquierdo) {//asigna un nodo al hijo izquierdo
+    public void setHIzquierdo(nodo H_izquierdo) {//asigna un nodo al hijo izquierdo
         this.H_izquierdo = H_izquierdo;
     }
-    public void setHijoDerecho(nodoArbol hijo_derecho) {//asigna un nodo al hijo derecho
+    public void setHDerecho(nodo H_derecho) {//asigna un nodo al hijo derecho
         this.H_derecho =H_derecho;
     }
  
@@ -71,15 +71,15 @@ public class nodo {
     public void insertar(int valor) {// recibe el nuevo valor y llama al  metodo recursivo insertarValor
         raiz = insertarValor(raiz, valor);// raiz es el punto de partida
     }
-    public nodoArbol insertarValor(nodoArbol nodo, int valor) {
+    public nodo insertarValor(nodoA nodo, int valor) {
         if (nodo == null) {// cuando encuetra un espacio vacio crea un nuevo nodo y lo enlaza al padre
             return new nodoArbol(valor);
         }
     //decide si insertar a la izquierda o derecha
         if (valor < nodo.getValor()) {
-            nodo.setHijoIzquierdo(insertarValor(nodo.getHijoIzquierdo(), valor));
+            nodo.setHIzquierdo(insertarValor(nodo.getHIzquierdo(), valor));
         } else if (valor > nodo.getValor()) {
-            nodo.setHijoDerecho(insertarValor(nodo.getHijoDerecho(), valor));
+            nodo.setHDerecho(insertarValor(nodo.getHDerecho(), valor));
         }
         return nodo;
     }
