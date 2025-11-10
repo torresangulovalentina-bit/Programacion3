@@ -1,5 +1,5 @@
  
-package algoritmo_dijkstra;
+package Taller_algoritmo_dijkstra;
 
  
 public class Grafo {
