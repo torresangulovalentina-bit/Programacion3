@@ -6,9 +6,9 @@ public class Dijkstra {
  
     // Algoritmo de Dijkstra
     public static int[] calcularDistancias(Grafo grafo, int origen) {
-        int vertices = grafo.getVertices();
-        int[][] matriz = grafo.getMatrizAdyacencia();
-        int[] dist = new int[vertices];
+        int vertices = grafo.getVertices(); // g.c.d.n
+        int[][] matriz = grafo.getMatrizAdyacencia();// m.c.p.ari
+        int[] dist = new int[vertices];//dist 
         boolean[] visitado = new boolean[vertices];
         // Para almacenar el camino más corto
         // int[] previo = new int[vertices];
