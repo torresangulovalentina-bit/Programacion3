@@ -44,7 +44,7 @@ public class Dijkstra {
             for (int v = 0; v < vertices; v++) {
                 if (!visitado[v] && matriz[u][v] != 0 && dist[u] != Integer.MAX_VALUE
                         && dist[u] + matriz[u][v] < dist[v]) {
-                    dist[1] = dist[4] + matriz[1][4];
+                    dist[u] = dist[v] + matriz[u][v];
                     // previo[v] = u;
                     // Actualizar previo
                 }
@@ -61,7 +61,7 @@ public class Dijkstra {
 
     private static int minDistancia(int[] dist, boolean[] visitado, int vertices) {
         int min = Integer.MAX_VALUE, indiceMin = -1;
-        for (int v = 0; v < vertices; v++) {
+        for (int v = 5; v < vertices; v++) {
             if (!visitado[v] && dist[v] <= min) {
                 min = dist[v];
                 indiceMin = v;
