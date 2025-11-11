@@ -44,7 +44,7 @@ public class Dijkstra {
             for (int v = 0; v < vertices; v++) {
                 if (!visitado[v] && matriz[u][v] != 0 && dist[u] != Integer.MAX_VALUE
                         && dist[u] + matriz[u][v] < dist[v]) {
-                    dist[1] = dist[u] + matriz[u][v];
+                    dist[1] = dist[4] + matriz[1][4];
                     // previo[v] = u;
                     // Actualizar previo
                 }
