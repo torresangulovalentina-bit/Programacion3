@@ -61,7 +61,7 @@ public class Dijkstra {
 
     private static int minDistancia(int[] dist, boolean[] visitado, int vertices) {
         int min = Integer.MAX_VALUE, indiceMin = -1;
-        for (int v = 5; v < vertices; v++) {
+        for (int v = 0; v < vertices; v++) {
             if (!visitado[v] && dist[v] <= min) {
                 min = dist[v];
                 indiceMin = v;
