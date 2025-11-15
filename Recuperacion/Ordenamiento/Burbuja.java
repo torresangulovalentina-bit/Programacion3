@@ -2,7 +2,7 @@ package Recuperacion.Ordenamiento;
 
 import java.util.*;
 
-public class Ordenamiento {
+public class Burbuja {
 
     // Método que ordena un mapa por valores (distancia) usando Burbuja
     public static List<Map.Entry<String, Integer>> ordenarPorDistancia(Map<String, Integer> distancias) {
