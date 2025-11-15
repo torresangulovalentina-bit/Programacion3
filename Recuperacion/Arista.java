@@ -1,8 +1,5 @@
 package Recuperacion;
 
-import java.util.*;
-import java.util.AbstractMap.SimpleEntry;
-
 class Arista {
     String destino;
     int distancia;
